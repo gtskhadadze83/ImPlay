@@ -3,7 +3,7 @@ name: build
 on:
   push:
     branches: ["*"]
-    pull_request:
+  pull_request:
   workflow_call:
   workflow_dispatch:
 
@@ -50,7 +50,7 @@ jobs:
           git config --global core.eol lf
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 5
       - uses: msys2/setup-msys2@v2
         with:
           msystem: mingw64
@@ -86,10 +86,14 @@ jobs:
           for f in ImPlay-*/*; do
             mv "$f" "${f/ImPlay-*-/ImPlay-dev-}"
           done
-      - uses: rickstaa/action-create-tag@v1
+      - uses: rickstaa/action-create-tag@v1.7.2
+        id: "tag_create"
         with:
-          tag: continuous
-          force_push_tag: true
+          tag: "latest"
+          tag_exists_error: false
+          message: "Latest release"
+          force_push_tag: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - uses: ncipollo/release-action@v1
         with:
           commit: ${{ github.sha }}
