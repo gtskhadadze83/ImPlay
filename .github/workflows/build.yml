@@ -40,30 +40,6 @@ jobs:
           path: |
             build/ImPlay-*.AppImage
             build/ImPlay-*.deb
-  macos:
-    runs-on: macos-14
-    name: macOS
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Install dependencies
-        env:
-          HOMEBREW_NO_AUTO_UPDATE: 1
-          HOMEBREW_NO_INSTALL_CLEANUP: 1
-        run: |
-          brew install cmake ninja git mpv freetype2 pkg-config
-      - name: Build ImPlay
-        env:
-          PKG_CONFIG_PATH: /usr/local/opt/libarchive/lib/pkgconfig
-        run: |
-          mkdir build && cd build
-          cmake -DCMAKE_BUILD_TYPE=RELEASE -DUSE_PATCHED_GLFW=ON -DCREATE_PACKAGE=ON -G Ninja ..
-          cmake --build . --target package
-      - uses: actions/upload-artifact@v4
-        with:
-          name: ImPlay-macOS
-          path: build/ImPlay-*.dmg
   win:
     runs-on: windows-latest
     name: Windows
@@ -100,7 +76,7 @@ jobs:
             build/ImPlay-*.msi
             build/ImPlay-*.zip
   publish:
-    needs: [linux, macos, win]
+    needs: [linux, win]
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     steps:
@@ -134,11 +110,7 @@ jobs:
               - Download the windows zip
               - Extract the zip
               - Run `ImPlay.exe`
-            ## macOS
-            - Download the dmg file
-            - Double click the dmg to show it's contents
-            - Drag ImPlay to `Applications` folder
-            - Run ImPlay from Launchpad
+           
             ## Linux
             - Debian Package
               - Download the deb file
