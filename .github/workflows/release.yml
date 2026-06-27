@@ -29,11 +29,7 @@ jobs:
               - Download the windows zip
               - Extract the zip
               - Run `ImPlay.exe`
-            ## macOS
-            - Download the dmg file
-            - Double click the dmg to show it's contents
-            - Drag ImPlay to `Applications` folder
-            - Run ImPlay from Launchpad
+           
             ## Linux
             - Debian Package
               - Download the deb file
